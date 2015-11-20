@@ -1,0 +1,28 @@
+{
+  "name": "homeauto-client",
+  "version": "0.0.0",
+  "description": "Webapp for controlling go based homeautomation server",
+  "main": "index.html",
+  "keywords": [
+    "html",
+    "polymer",
+    "angular",
+    "css",
+    "homeautomation",
+    "webapp"
+  ],
+  "authors": [
+    "Wlad (TheBelarussian)"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.2.0"
+  }
+}
