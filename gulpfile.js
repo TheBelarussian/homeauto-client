@@ -84,6 +84,22 @@ gulp.task('sass', function () {
     .pipe(connect.reload());
 });
 
+gulp.task('sass-components', function() {
+	var opts = {
+	  outputStyle: "compressed"
+	};
+
+	var debugOpts = {
+	  outputStyle: "expanded"
+	};
+
+	gulp.src('./src/app/components/**/*.scss')
+	.pipe(plumber({errorHandler: onError}))
+    .pipe(gulpif(debug, sass(debugOpts).on('error', sass.logError)))
+    .pipe(gulpif(!debug, sass(opts).on('error', sass.logError)))
+    .pipe(gulp.dest('./dist/components/'))
+    .pipe(connect.reload());
+});
 
 gulp.task('assets', function () {
   gulp.src(['./src/assets/**', '!./src/assets/sass{,/**}'])
@@ -93,10 +109,11 @@ gulp.task('assets', function () {
 
 
 gulp.task('watch', ['js', 'sass', 'html', 'assets'], function () {
-  gulp.watch(['./src/app/*.js', './src/app/**/*.js'], ['js']);
-  gulp.watch(['./src/assets/sass/**/*.scss', './src/assets/sass/*.scss'], ['sass']);
-  gulp.watch(['./src/*.html', './src/**/*.html'], ['html']);
-  gulp.watch(['./src/assets/**'], ['assets']);
+	gulp.watch('./src/app/components/**/*.scss', ['sass-components']);
+	gulp.watch(['./src/app/*.js', './src/app/**/*.js'], ['js']);
+	gulp.watch(['./src/assets/sass/**/*.scss', './src/assets/sass/*.scss'], ['sass']);
+	gulp.watch(['./src/*.html', './src/**/*.html'], ['html']);
+	gulp.watch(['./src/assets/**'], ['assets']);
 });
 
 
@@ -116,7 +133,7 @@ gulp.task('debug', ['setdebug', 'default'], function() {
 
 });
 
-gulp.task('build', ['bower', 'js', 'sass', 'html', 'assets'], function() {
+gulp.task('build', ['bower', 'js', 'sass', 'sass-components', 'html', 'assets'], function() {
 
 });
 

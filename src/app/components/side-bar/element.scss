@@ -1,0 +1,25 @@
+$side-bar-color : #ecf0f1;
+$side-bar-hover : rgb(49, 149, 191);
+
+div.wrap {
+    position: absolute;
+    width: 300px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    background-color: $side-bar-color;
+    display: block;
+
+    span {
+        display: block;
+        padding: 15px 8px;
+        border-bottom: 1px solid darken($side-bar-color, 8%);
+        font-family: lato, sans-serif;
+
+        &:hover {
+            background-color: $side-bar-hover;
+            color : darken($side-bar-hover, 10%);
+            cursor: pointer;
+        }
+    }
+}

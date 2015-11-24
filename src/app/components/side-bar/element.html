@@ -1,0 +1,29 @@
+<link rel="import" href="../../assets/libs/polymer/polymer.html">
+<link rel="import" href="../../assets/libs/iron-selector/iron-selector.html">
+<link rel="import" href="../tabs/element.html">
+<dom-module id="sidebar-component">
+
+    <template>
+        <link rel="stylesheet" href="element.css">
+        <div class="wrap">
+            <tabs-component>
+                <button-component class="active">
+                    <i class="icon ion-ios-monitor"></i>
+                      Devices</button-component>
+                <button-component>
+                    <i class="icon ion-ios-baseball-outline"></i>
+                    Rooms</button-component>
+            </tabs-component>
+            <iron-selector selected="0">
+                <content></content>
+            </iron-selector>
+        </div>
+    </template>
+
+    <script>
+      Polymer({
+        is: "sidebar-component",
+      });
+    </script>
+
+</dom-module>
