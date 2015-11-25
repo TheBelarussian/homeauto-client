@@ -12,7 +12,7 @@
     <template>
         <link rel="stylesheet" href="element.css">
         <div class="wrap">
-            <paper-tabs class="paper-tabs" selected="{{type}}" style="background-color: #70b58b; height:66px;" selected-class="active">
+            <paper-tabs class="paper-tabs" selected="{{type}}" style="background-color: #70b58b; height:64px;" selected-class="active">
                 <paper-tab>
                     <iron-icon icon="search" class="icon ion-ios-monitor">
                         <iron-meta id="meta" type="iconset" class="style-scope iron-icon"></iron-meta>
@@ -25,11 +25,12 @@
                 </paper-tab>
             </paper-tabs>
 
-            <iron-pages selected="{{type}}" style="color: #333;">
-                <div>
-                    <paper-menu style="background-color: transparent;" selected="{{selectedElement}}" items="{{data.deviceList}}">
+            <!--// TODO: Fix color theme -->
+            <iron-pages selected="{{type}}" style="color: #333; background-color: transparent;">
+                <div >
+                    <paper-menu style="background-color: #FFF;" selected="{{selectedElement}}" items="{{data.deviceList}}">
                         <template id="deviceList" is="dom-repeat" items={{data.deviceList}} as="device" >
-                            <paper-item style="color: #000; border-bottom: 1px solid #DEDEDE;"> {{ device.name }}</paper-item>
+                            <paper-item style="color: #000; border-bottom: 1px solid #EFEFEF;"> {{ device.name }}</paper-item>
                         </template>
                     </paper-menu>
                     <paper-button on-click="addDevice" elevation="1" style="background-color: #CCC; width: 97%;">
@@ -39,9 +40,9 @@
                   </paper-button>
                 </div>
                 <div>
-                    <paper-menu style="background-color: transparent;" selected="{{selectedElement}}" items="{{data.roomList}}">
+                    <paper-menu style="background-color: #FFF;" selected="{{selectedElement}}" items="{{data.roomList}}">
                         <template is="dom-repeat" items={{data.roomList}} as="room" >
-                            <paper-item style="color: #000; border-bottom: 1px solid #DEDEDE;"> {{ room.name }}</paper-item>
+                            <paper-item style="color: #000; border-bottom: 1px solid #EFEFEF;"> {{ room.name }}</paper-item>
                         </template>
                     </paper-menu>
                 </div>
