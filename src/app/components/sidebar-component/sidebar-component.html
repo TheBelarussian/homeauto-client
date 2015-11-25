@@ -1,0 +1,114 @@
+<link rel="import" href="../../assets/libs/polymer/polymer.html">
+<link rel="import" href="../../assets/libs/iron-selector/iron-selector.html">
+<link rel="import" href="../../assets/libs/paper-button/paper-button.html">
+<link rel="import" href="../../assets/libs/paper-tabs/paper-tabs.html">
+<link rel="import" href="../../assets/libs/paper-styles/paper-styles.html">
+<link rel="import" href="../../assets/libs/iron-icon/iron-icon.html">
+<link rel="import" href="../../assets/libs/iron-pages/iron-pages.html">
+<link rel="import" href="../../assets/libs/paper-item/paper-item.html">
+
+<dom-module id="sidebar-component">
+
+    <template>
+        <link rel="stylesheet" href="element.css">
+        <div class="wrap">
+            <paper-tabs selected="{{selected}}" style="background-color: #70b58b;">
+                <paper-tab>
+                    <iron-icon icon="search" class="icon ion-ios-monitor">
+                        <iron-meta id="meta" type="iconset" class="style-scope iron-icon"></iron-meta>
+                    </iron-icon> Devices
+                </paper-tab>
+                <paper-tab>
+                    <iron-icon icon="search" class="icon ion-ios-monitor">
+                        <iron-meta id="meta" type="iconset" class="style-scope iron-icon"></iron-meta>
+                    </iron-icon> Rooms
+                </paper-tab>
+            </paper-tabs>
+
+            <iron-pages selected="{{selected}}" style="color: #333;">
+                <div>
+                    <template id="deviceList" is="dom-repeat" items={{deviceList}} as="device" >
+                        <paper-item style="color: #000; border-top: 1px solid #DEDEDE;"> {{ device.name }}</paper-item>
+                    </template>
+                    <paper-button on-click="addDevice" elevation="1" style="background-color: #CCC; width: 97%;">
+                          <iron-icon icon="search" class="icon ion-ios-monitor">
+                            <iron-meta id="meta" type="iconset" class="style-scope iron-icon"></iron-meta>
+                        </iron-icon> Add Devices
+                  </paper-button>
+                </div>
+                <div>
+                    <template is="dom-repeat" items={{roomList}} as="room" >
+                        <paper-item style="color: #000; border-top: 1px solid #DEDEDE;"> {{ room.name }}</paper-item>
+                    </template>
+                </div>
+
+            </iron-pages>
+            <content on-click="addDevice"></content>
+        </div>
+    </template>
+
+    <script>
+    Polymer({
+        is: "sidebar-component",
+        properties: {
+            selected: {
+                type: Number,
+                value: 0
+            }
+        },
+
+        addDevice : function() {
+            this.push('deviceList',
+                {
+                    name : "NEW DEVICE",
+                    id   : "RANDOM ID",
+                    type : "TV"
+                }
+            );
+        },
+
+        /*  Provides default data dor element.
+         *  Will at a later point be obtained from Go REST server
+         *
+         */
+        ready : function() {
+            this.deviceList = [
+                {
+                    name : "unit 1",
+                    id   : "RANDOM ID",
+                    type : "TV"
+                },
+                {
+                    name : "unit 1",
+                    id   : "RANDOM ID",
+                    type : "TV"
+                },
+                {
+                    name : "unit 1",
+                    id   : "RANDOM ID",
+                    type : "TV"
+                }
+            ];
+
+            this.roomList = [
+                {
+                    name : "Room 1",
+                    rid   : "RANDOM ID",
+                    type : "TV"
+                },
+                {
+                    name : "Room 2",
+                    rid   : "RANDOM ID",
+                    type : "TV"
+                },
+                {
+                    name : "Room 3",
+                    rid   : "RANDOM ID",
+                    type : "TV"
+                }
+            ]
+        }
+      });
+    </script>
+
+</dom-module>

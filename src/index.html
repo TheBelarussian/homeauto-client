@@ -4,27 +4,24 @@
 <head>
 <title>HomeAuto</title>
 
-    <script src="http://use.edgefonts.net/lato.js"></script>
+    <!-- Some temporal style hotfixes -->
     <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-<!-- Import polymer -->
+
+    <!-- Import polymer -->
     <script src="assets/libs/webcomponentsjs/webcomponents-lite.min.js"></script>
     <link rel="import" href="assets/libs/polymer/polymer.html">
-    <link rel="import" href="components/button/element.html">
-    <link rel="import" href="components/side-bar/element.html">
 
-<!-- Import main style file -->
+    <!-- Import modules here -->
+    <link rel="import" href="components/control-view/control-view.html">
+    <link rel="import" href="components/dark-theme/dark-side.html">
+
+    <!-- Import main style file -->
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
 <body>
     <navbar-component></navbar-component>
 
-    <button-component>Test</button-component>
-
-    <sidebar-component>
-            <span>Test 1</span>
-            <span>Test 2</span>
-            <span>Test 3</span>
-    </sidebar-component>
+    <control-view></control-view>
 </body>
 </html>
