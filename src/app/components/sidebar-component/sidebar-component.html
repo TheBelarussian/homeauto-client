@@ -1,8 +1,8 @@
 <link rel="import" href="../../assets/libs/polymer/polymer.html">
-<link rel="import" href="../../assets/libs/iron-selector/iron-selector.html">
 <link rel="import" href="../../assets/libs/paper-button/paper-button.html">
 <link rel="import" href="../../assets/libs/paper-tabs/paper-tabs.html">
 <link rel="import" href="../../assets/libs/paper-styles/paper-styles.html">
+<link rel="import" href="../../assets/libs/paper-menu/paper-menu.html">
 <link rel="import" href="../../assets/libs/iron-icon/iron-icon.html">
 <link rel="import" href="../../assets/libs/iron-pages/iron-pages.html">
 <link rel="import" href="../../assets/libs/paper-item/paper-item.html">
@@ -12,7 +12,7 @@
     <template>
         <link rel="stylesheet" href="element.css">
         <div class="wrap">
-            <paper-tabs selected="{{selected}}" style="background-color: #70b58b;">
+            <paper-tabs selected="{{type}}" style="background-color: #70b58b;">
                 <paper-tab>
                     <iron-icon icon="search" class="icon ion-ios-monitor">
                         <iron-meta id="meta" type="iconset" class="style-scope iron-icon"></iron-meta>
@@ -25,11 +25,14 @@
                 </paper-tab>
             </paper-tabs>
 
-            <iron-pages selected="{{selected}}" style="color: #333;">
+            <iron-pages selected="{{type}}" style="color: #333;">
                 <div>
-                    <template id="deviceList" is="dom-repeat" items={{deviceList}} as="device" >
-                        <paper-item style="color: #000; border-top: 1px solid #DEDEDE;"> {{ device.name }}</paper-item>
-                    </template>
+                    <paper-menu style="background-color: transparent;" selected="{{selectedDevice}}" items="{{deviceList}}">
+                        <template id="deviceList" is="dom-repeat" items={{deviceList}} as="device" >
+                            <paper-item style="color: #000; border-bottom: 1px solid #DEDEDE;"> {{ device.name }}</paper-item>
+                        </template>
+                    </paper-menu>
+                    <p>{{selectedDevice}}</p>
                     <paper-button on-click="addDevice" elevation="1" style="background-color: #CCC; width: 97%;">
                           <iron-icon icon="search" class="icon ion-ios-monitor">
                             <iron-meta id="meta" type="iconset" class="style-scope iron-icon"></iron-meta>
@@ -38,7 +41,7 @@
                 </div>
                 <div>
                     <template is="dom-repeat" items={{roomList}} as="room" >
-                        <paper-item style="color: #000; border-top: 1px solid #DEDEDE;"> {{ room.name }}</paper-item>
+                        <paper-item style="color: #000; border-bottom: 1px solid #DEDEDE;"> {{ room.name }}</paper-item>
                     </template>
                 </div>
 
@@ -51,9 +54,13 @@
     Polymer({
         is: "sidebar-component",
         properties: {
-            selected: {
+            selectedDevice: {
                 type: Number,
                 value: 0
+            },
+            type: {
+                type: Number,
+                value: 1
             }
         },
 
@@ -75,17 +82,17 @@
             this.deviceList = [
                 {
                     name : "unit 1",
-                    id   : "RANDOM ID",
+                    id   : "22",
                     type : "TV"
                 },
                 {
                     name : "unit 1",
-                    id   : "RANDOM ID",
+                    id   : "23",
                     type : "TV"
                 },
                 {
                     name : "unit 1",
-                    id   : "RANDOM ID",
+                    id   : "24",
                     type : "TV"
                 }
             ];
@@ -93,17 +100,17 @@
             this.roomList = [
                 {
                     name : "Room 1",
-                    rid   : "RANDOM ID",
+                    rid   : "34",
                     type : "TV"
                 },
                 {
                     name : "Room 2",
-                    rid   : "RANDOM ID",
+                    rid   : "345",
                     type : "TV"
                 },
                 {
                     name : "Room 3",
-                    rid   : "RANDOM ID",
+                    rid   : "36",
                     type : "TV"
                 }
             ]

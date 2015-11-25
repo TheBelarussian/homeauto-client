@@ -3,12 +3,24 @@
 
 <dom-module id="control-view">
     <template>
-        <sidebar-component></sidebar-component>
+        <sidebar-component selected-device="{{objectID}}" type="{{type}}"></sidebar-component>
+            <p>{{objectID}}</p>
     </template>
     <script>
         Polymer({
             is : 'control-view',
-
+            properties : {
+                objectID : {
+                    type: Number,
+                    value: 0,
+                    notify: true
+                },
+                type : {
+                    type: Number,
+                    value : 1,
+                    notify: true
+                }
+            }
         })
     </script>
 </dom-module>
