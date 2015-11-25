@@ -31,6 +31,8 @@
     "iron-pages": "PolymerElements/iron-pages#~1.0.4",
     "paper-item": "PolymerElements/paper-item#~1.1.2",
     "paper-dialog": "PolymerElements/paper-dialog#~1.0.3",
-    "paper-menu": "PolymerElements/paper-menu#~1.2.0"
+    "paper-menu": "PolymerElements/paper-menu#~1.2.0",
+    "paper-drawer-panel": "PolymerElements/paper-drawer-panel#~1.0.5",
+    "paper-toolbar": "PolymerElements/paper-toolbar#~1.1.1"
   }
 }

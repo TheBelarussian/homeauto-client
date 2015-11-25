@@ -1,10 +1,14 @@
 <link rel="import" href="../../assets/libs/polymer/polymer.html">
 <link rel="import" href="../../components/sidebar-component/sidebar-component.html">
-
+<link rel="import" href="../../components/control-main-panel/control-main-panel.html">
+<link rel="import" href="../../assets/libs/paper-drawer-panel/paper-drawer-panel.html">
 <dom-module id="control-view">
     <template>
-        <sidebar-component selected-device="{{objectID}}" type="{{type}}"></sidebar-component>
-            <p>{{objectID}}</p>
+        <paper-drawer-panel>
+            <sidebar-component drawer selected-element="{{objectID}}" type="{{type}}" data="{{data}}"></sidebar-component>
+            <control-main-panel main selected-data="{{selectedElement}}"></control-main-panel>
+
+        </paper-drawer-panel>
     </template>
     <script>
         Polymer({
@@ -13,12 +17,76 @@
                 objectID : {
                     type: Number,
                     value: 0,
-                    notify: true
+                    observer: '_selectedIndexChanged'
                 },
                 type : {
                     type: Number,
                     value : 1,
                     notify: true
+                }
+            },
+
+            // Handle selection changed
+            // Triggers mein view change
+            _selectedIndexChanged : function(newValue) {
+                // Stop function if passed value was undefined
+                if(typeof newValue === 'undefined') {
+                    return;
+                }
+                if(this.type === 0) {
+                    this.selectedElement = this.data.deviceList[this.objectID];
+                }
+
+                if(this.type === 1) {
+                    this.selectedElement = this.data.roomList[this.objectID];
+                }
+
+                if(typeof this.selectedElement !== 'undefined') {
+                    console.log("[DEBUG]" + this.selectedElement.name);
+                }
+            },
+
+            /*  Provides default data dor element.
+             *  Will at a later point be obtained from Go REST server
+             *
+             */
+            ready : function() {
+                this.data = {
+                    deviceList : [
+                    {
+                        name : "unit 1",
+                        id   : "22",
+                        type : "TV",
+                        content: {
+                            text : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut sapiente nesciunt neque consequatur rerum nisi blanditiis ipsa? Soluta debitis pariatur iste eum reiciendis unde, nisi error tenetur consectetur voluptates rem?"
+                        }
+                    },
+                    {
+                        name : "unit 1",
+                        id   : "23",
+                        type : "TV"
+                    },
+                    {
+                        name : "unit 1",
+                        id   : "24",
+                        type : "TV"
+                    }],
+                    roomList : [
+                    {
+                        name : "Room 1",
+                        rid   : "34",
+                        type : "TV"
+                    },
+                    {
+                        name : "Room 2",
+                        rid   : "345",
+                        type : "TV"
+                    },
+                    {
+                        name : "Room 3",
+                        rid   : "36",
+                        type : "TV"
+                    }]
                 }
             }
         })

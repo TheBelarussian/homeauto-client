@@ -1,0 +1,30 @@
+<link rel="import" href="../../assets/libs/polymer/polymer.html">
+<link rel="import" href="../../assets/libs/paper-toolbar/paper-toolbar.html">
+
+
+<dom-module id="control-main-panel">
+    <template>
+        <paper-header-panel >
+            <paper-toolbar></paper-toolbar>
+                <div>[[selectedData.content.text]]</div>
+            </paper-header-panel>
+        </paper-drawer-panel>
+    </template>
+    <script>
+        Polymer({
+            is : 'control-main-panel',
+            properties : {
+                selectedData : {
+                    type: Object,
+                    observer: '_selectedIndexChanged'
+                }
+            },
+
+            // Handle selection changed
+            // Triggers mein view change
+            _selectedIndexChanged : function(newValue) {
+                console.log("value changed " + newValue);
+            }
+        })
+    </script>
+</dom-module>
