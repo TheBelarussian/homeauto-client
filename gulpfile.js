@@ -10,6 +10,7 @@ var gulp 		  	= require('gulp'),
 	bower 		  	= require('gulp-bower'),
 	connect 	  	= require('gulp-connect'),
 	minifyHTML 		= require('gulp-minify-html'),
+	polybuild 		= require('polybuild'),
 	gulpif 		  	= require('gulp-if'),
 	sass        	= require('gulp-sass'),
 	notify 			= require('gulp-notify'),
@@ -62,6 +63,7 @@ gulp.task('html', function () {
       basepath: '@file'
 	   }))
     .pipe(gulpif(!debug, minifyHTML(opts)))
+	.pipe(polybuild({maximumCrush: true, suffix: 'build'}))
     .pipe(gulp.dest('./dist/'))
     .pipe(connect.reload());
 });
@@ -80,7 +82,7 @@ gulp.task('sass', function () {
 	.pipe(plumber({errorHandler: onError}))
     .pipe(gulpif(debug, sass(debugOpts).on('error', sass.logError)))
     .pipe(gulpif(!debug, sass(opts).on('error', sass.logError)))
-    .pipe(gulp.dest('./dist/assets/css'))
+    .pipe(gulp.dest('./src/assets/css'))
     .pipe(connect.reload());
 });
 
