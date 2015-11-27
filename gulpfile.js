@@ -63,7 +63,7 @@ gulp.task('html', function () {
       basepath: '@file'
 	   }))
     .pipe(gulpif(!debug, minifyHTML(opts)))
-	.pipe(polybuild({maximumCrush: true, suffix: 'build'}))
+	//.pipe(polybuild({maximumCrush: true, suffix: 'build'}))
     .pipe(gulp.dest('./dist/'))
     .pipe(connect.reload());
 });
