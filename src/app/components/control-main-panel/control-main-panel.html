@@ -1,5 +1,6 @@
 <link rel="import" href="../../assets/libs/polymer/polymer.html">
 <link rel="import" href="../../assets/libs/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../../assets/libs/paper-card/paper-card.html">
 
 
 <dom-module id="control-main-panel">
@@ -7,7 +8,16 @@
         <paper-header-panel >
 
         </paper-header-panel>
-        <div style="color: #333;">[[selectedData.content.text]]</div>
+        <div style="margin: 15px;">
+            <paper-card heading="Card Title" style="width:100%;">
+                <div class="card-content" style="color: #444;">[[selectedData.content.text]]</div>
+                <div class="card-actions">
+                    <paper-button>Some action</paper-button>
+                </div>
+            </paper-card>
+            <paper-card style="margin-top: 15px;" heading="Card Title" image="https://unsplash.com/photos/NQSWvyVRIJk/download">
+            </paper-card>
+        </div>
     </template>
     <script>
         Polymer({
