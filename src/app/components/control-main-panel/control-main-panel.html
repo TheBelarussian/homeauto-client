@@ -10,7 +10,7 @@
         </paper-header-panel>
         <div style="margin: 15px;">
             <paper-card heading="Table Desk" style="width:100%;">
-                <div class="card-content" style="color: #444;">[[selectedData.content.text]]{{serverData}}</div>
+                <div class="card-content" style="color: #444;">[[selectedData.content.text]]</div>
                 <div class="card-actions">
                     <paper-button style="color: #000;" on-tap="handleDesk">Toggle Light</paper-button>
                 </div>
@@ -28,6 +28,10 @@
             on-response="handleTestData"></iron-ajax>
     </template>
     <script>
+        var deviceStates = [{
+            status : 1
+        }];
+
         Polymer({
             is : 'control-main-panel',
             properties : {
@@ -44,9 +48,19 @@
             },
 
             handleDesk : function() {
-                console.log("test");
                 var ajaxRequest = this.$.testAjax;
-                ajaxRequest.url = "/test/1"
+                // Reverse current device state
+                if(deviceStates[0].status) {
+                    deviceStates[0].status = 0;
+                }
+                else {
+                    deviceStates[0].status = 1;
+                }
+
+                ajaxRequest.url = "/test/1/" + deviceStates[0].status;
+
+                console.log("URL", "/test/1/" + deviceStates[0].status);
+
                 ajaxRequest.generateRequest();
             },
             handleTestData : function(data) {
