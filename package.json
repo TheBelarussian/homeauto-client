@@ -30,6 +30,7 @@
     "lodash._reinterpolate": "^3.0.0",
     "lodash.template": "^3.6.2",
     "multipipe": "^0.1.2",
+    "polybuild": "^1.0.5",
     "replace-ext": "0.0.1",
     "through2": "^2.0.0",
     "vinyl": "^0.5.1"

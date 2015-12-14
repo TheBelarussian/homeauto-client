@@ -9,15 +9,23 @@
 
         </paper-header-panel>
         <div style="margin: 15px;">
-            <paper-card heading="Card Title" style="width:100%;">
-                <div class="card-content" style="color: #444;">[[selectedData.content.text]]</div>
+            <paper-card heading="Table Desk" style="width:100%;">
+                <div class="card-content" style="color: #444;">[[selectedData.content.text]]{{serverData}}</div>
                 <div class="card-actions">
-                    <paper-button>Some action</paper-button>
+                    <paper-button style="color: #000;" on-tap="handleDesk">Toggle Light</paper-button>
                 </div>
             </paper-card>
             <paper-card style="margin-top: 15px;" heading="Card Title" image="https://unsplash.com/photos/NQSWvyVRIJk/download">
             </paper-card>
         </div>
+
+        <iron-ajax
+            id="testAjax"
+            method="GET"
+            url="/test"
+            handle-as="json"
+            last-response="{{serverData}}"
+            on-response="handleTestData"></iron-ajax>
     </template>
     <script>
         Polymer({
@@ -33,6 +41,16 @@
             // Triggers mein view change
             _selectedIndexChanged : function(newValue) {
                 console.log("value changed " + newValue);
+            },
+
+            handleDesk : function() {
+                console.log("test");
+                var ajaxRequest = this.$.testAjax;
+                ajaxRequest.url = "/test/1"
+                ajaxRequest.generateRequest();
+            },
+            handleTestData : function(data) {
+                console.log("Server data", data, this.serverData);
             }
         })
     </script>
