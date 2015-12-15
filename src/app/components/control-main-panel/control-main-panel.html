@@ -12,24 +12,14 @@
             <paper-card heading="First TEST" style="width:100%;">
                 <div class="card-content" style="color: #444;">[[selectedData.content.text]]client v. 0.0.1rev14</div>
             </paper-card>
-            <paper-card heading="Sterio System" style="width:100%; margin-top: 15px;">
-                <div class="card-content" style="color: #444;"></div>
-                <div class="card-actions">
-                    <paper-button style="color: #000;" data-id="1" on-tap="handleToggleDevice">Toggle Light</paper-button>
-                </div>
-            </paper-card>
-            <paper-card heading="Desk" style="width:100%; margin-top: 15px;">
-                <div class="card-content" style="color: #444;"></div>
-                <div class="card-actions">
-                    <paper-button style="color: #000;" data-id="2" on-tap="handleToggleDevice">Toggle Light</paper-button>
-                </div>
-            </paper-card>
-            <paper-card heading="Lamp 1" style="width:100%; margin-top: 15px;">
-                <div class="card-content" style="color: #444;"></div>
-                <div class="card-actions">
-                    <paper-button style="color: #000;" data-id="3" on-tap="handleToggleDevice">Toggle Light</paper-button>
-                </div>
-            </paper-card>
+            <template is="dom-repeat" items="{{devices}}">
+                <paper-card heading="{{item.name}} #{{item.id}}" style="width:100%; margin-top: 15px;">
+                    <div class="card-content" style="color: #444;"></div>
+                    <div class="card-actions">
+                        <paper-button style="color: #000;" data-did="{{item.id}}" on-tap="handleToggleDevice">Toggle Light</paper-button>
+                    </div>
+                </paper-card>
+            </template>
         </div>
 
         <iron-ajax
@@ -41,10 +31,6 @@
             on-response="handleTestData"></iron-ajax>
     </template>
     <script>
-        var deviceStates = [{
-            status : 1
-        }];
-
         Polymer({
             is : 'control-main-panel',
             properties : {
@@ -54,6 +40,23 @@
                 }
             },
 
+            ready: function() {
+                this.devices = [{
+                    id : 1,
+                    name :'Sterio System',
+                    status : 0
+                },
+                {
+                    id : 2,
+                    name :'Desk',
+                    status : 0
+                },
+                {
+                    id : 3,
+                    name :'Lamp 1',
+                    status : 0
+                }];
+            },
             // Handle selection changed
             // Triggers mein view change
             _selectedIndexChanged : function(newValue) {
@@ -61,20 +64,22 @@
             },
 
             handleToggleDevice : function(evt) {
-                var ajaxRequest = this.$.testAjax;
+                var device = evt.model.item;
+
+                console.log(deviceList, evt.target);
+
                 // Reverse current device state
-                if(deviceStates[0].status) {
-                    deviceStates[0].status = 0;
+                if(device.status) {
+                    device.status = 0;
                 }
                 else {
-                    deviceStates[0].status = 1;
+                    device.status = 1;
                 }
 
-                // Now get device ID to pass to server
-                var id = evt.target.getAttribute('data-id');
+                var ajaxRequest = this.$.testAjax;
 
                 // Compose request URL
-                ajaxRequest.url = "/test/"+ id + "/" + deviceStates[0].status;
+                ajaxRequest.url = "/test/"+ device.id + "/" + device.status;
 
                 // Send request to server
                 ajaxRequest.generateRequest();
