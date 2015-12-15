@@ -9,13 +9,26 @@
 
         </paper-header-panel>
         <div style="margin: 15px;">
-            <paper-card heading="Table Desk" style="width:100%;">
-                <div class="card-content" style="color: #444;">[[selectedData.content.text]]</div>
+            <paper-card heading="First TEST" style="width:100%;">
+                <div class="card-content" style="color: #444;">[[selectedData.content.text]]client v. 0.0.1rev14</div>
+            </paper-card>
+            <paper-card heading="Sterio System" style="width:100%; margin-top: 15px;">
+                <div class="card-content" style="color: #444;"></div>
                 <div class="card-actions">
-                    <paper-button style="color: #000;" on-tap="handleDesk">Toggle Light</paper-button>
+                    <paper-button style="color: #000;" data-id="1" on-tap="handleToggleDevice">Toggle Light</paper-button>
                 </div>
             </paper-card>
-            <paper-card style="margin-top: 15px;" heading="Card Title" image="https://unsplash.com/photos/NQSWvyVRIJk/download">
+            <paper-card heading="Desk" style="width:100%; margin-top: 15px;">
+                <div class="card-content" style="color: #444;"></div>
+                <div class="card-actions">
+                    <paper-button style="color: #000;" data-id="2" on-tap="handleToggleDevice">Toggle Light</paper-button>
+                </div>
+            </paper-card>
+            <paper-card heading="Lamp 1" style="width:100%; margin-top: 15px;">
+                <div class="card-content" style="color: #444;"></div>
+                <div class="card-actions">
+                    <paper-button style="color: #000;" data-id="3" on-tap="handleToggleDevice">Toggle Light</paper-button>
+                </div>
             </paper-card>
         </div>
 
@@ -47,7 +60,7 @@
                 console.log("value changed " + newValue);
             },
 
-            handleDesk : function() {
+            handleToggleDevice : function(evt) {
                 var ajaxRequest = this.$.testAjax;
                 // Reverse current device state
                 if(deviceStates[0].status) {
@@ -57,10 +70,15 @@
                     deviceStates[0].status = 1;
                 }
 
-                ajaxRequest.url = "/test/1/" + deviceStates[0].status;
+                // Now get device ID to pass to server
+                var id = evt.target.getAttribute('data-id');
 
-                console.log("URL", "/test/1/" + deviceStates[0].status);
+                // Compose request URL
+                ajaxRequest.url = "/test/"+ id + "/" + deviceStates[0].status;
 
+                alert(id);
+
+                // Send request to server
                 ajaxRequest.generateRequest();
             },
             handleTestData : function(data) {
