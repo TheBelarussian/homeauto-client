@@ -1,0 +1,8 @@
+{
+  "entrypoint": "index.html",
+  "shell": "src/ha-app.html",
+  "fragments": [
+    "src/device-list.html",
+    "src/room-list.html"
+  ]
+}

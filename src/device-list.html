@@ -1,0 +1,349 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="styles/dark-side.css" type="css">
+
+<dom-module id="device-list">
+
+    <template>
+
+        <style>
+            :host {
+                display: block;
+                padding: 10px;
+            }
+
+            .card {
+                box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+                padding: 16px;
+                margin: 24px;
+                background-color: #333;
+                color: #EEE;
+            }
+
+            .card.withImage {
+                background-image: url("https://unsplash.it/1080/400/?blur");
+                background-size: cover;
+            }
+
+            h1 {
+                font-size: 22px;
+                margin: 16px 0;
+                color: #FFF;
+            }
+
+            .list-item {
+                position: relative;
+                display: block;
+                padding: 10px 15px;
+                border-top: 1px solid #2D2D2D;
+            }
+
+            .list-item paper-toggle-button {
+                display: inline;
+                width: 30%;
+            }
+
+            .list-item h3 {
+                display: inline;
+                width: 50%;
+            }
+
+            .list-item .close {
+                position: absolute;
+                display: block;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                background-color: #111;
+            }
+
+            paper-toggle-button {
+                --paper-toggle-button-checked-bar-color: var(--paper-green-400);
+                --paper-toggle-button-checked-button-color: var(--paper-green-500);
+                --paper-toggle-button-checked-ink-color: var(--paper-green-200);
+            }
+
+            paper-dialog {
+                color: #000;
+                max-width: 60%;
+            }
+
+            #statusToast {
+                --paper-toast-background-color: white;
+                --paper-toast-color: black;
+                text-align: right;
+            }
+
+            .message-container {
+                text-align: center;
+                width: 60%;
+                height: 30vh;
+                padding: 20px 20%;
+                padding-top: 15vh;
+            }
+        </style>
+        <template is="dom-if" if="{{deviceListEmpty}}">
+            <div class="card withImage">
+                <div class="message-container">
+                    <h1>No devices.</h1>
+                    <p>
+                        Well, no problem just add one then.
+                    </p>
+                    <paper-button style="background-color:#FFF; color: #333;" on-tap="handleAddDevice">
+                        Add device
+                    </paper-button>
+                </div>
+            </div>
+        </template>
+        <template is="dom-if" if="{{!deviceListEmpty}}">
+            <div class="card">
+                <h1>Device List</h1>
+
+                <!-- Loading animation. -->
+
+
+                <paper-button style="background-color:#FFF; color: #333;" on-tap="handleAddDevice">
+                    Add device
+                </paper-button>
+
+                <iron-list items="[[deviceList.Data]]" as="item">
+                    <template>
+                        <a class="list-item">
+                            <paper-toggle-button name="[[item.id]]" checked="false" on-change="handleDeviceToggle"></paper-toggle-button>
+                            <h3>[[item.name]] <small>Type:[[item.type]]</small></h3>
+
+                            <paper-icon-button icon="close" class="close" title="heart" on-tap="handleRemoveDevice"></paper-icon-button>
+                        </a>
+                    </template>
+                </iron-list>
+            </div>
+        </template>
+
+
+
+        <!-- Ajax for getting device list from server -->
+        <iron-ajax id="ajaxDataElement" auto url="/api/devices/list" method="GET"
+            handle-as="json"
+            last-response="{{deviceList}}"
+            on-response="handleResponse"
+            debounce-duration="200">
+        </iron-ajax>
+
+        <!-- Ajax element for sending data to server -->
+        <iron-ajax id="ajaxRequestElement"
+            handle-as="json"
+            content-type="application/json"
+            on-response="handleAjaxResponse">
+        </iron-ajax>
+
+
+
+        <!-- MARK: Dialogs & Notifications come here -->
+        <paper-dialog id="addDeviceDialog" on-iron-overlay-closed="handleAddDeviceDialogClose" always-on-top>
+            <h2>Add new device</h2>
+            <paper-dialog-scrollable>
+                <!-- TODO: clean css -->
+                <div style="padding:16px; min-width: 450px;">
+                    <paper-input id="deviceName" error-message="Invalid input!" label="Device name"></paper-input>
+                    <paper-input id="deviceType" error-message="Must be a valid type" label="Device type"></paper-input>
+                </div>
+            </paper-dialog-scrollable>
+            <div class="buttons">
+                <paper-button dialog-dismiss>Cancel</paper-button>
+                <paper-button dialog-confirm>Accept</paper-button>
+            </div>
+        </paper-dialog>
+
+        <paper-dialog id="removeDeviceDialog" on-iron-overlay-closed="handleRemoveDeviceDialogClose" always-on-top>
+            <h2>Remove device?</h2>
+            <p>Are you sure you want to remove "[[toBeRemovedDevice.name]]"?</p>
+            <div class="buttons">
+                <paper-button dialog-dismiss>Cancel</paper-button>
+                <paper-button dialog-confirm>Accept</paper-button>
+            </div>
+        </paper-dialog>
+
+
+
+        <!-- Notification toast -->
+        <paper-toast id="statusToast" class="fit-bottom" text="This toast is red and fits bottom!">
+            <paper-button onclick="statusToast.toggle()" class="yellow-button">Close now!</paper-button>
+        </paper-toast>
+
+    </template>
+
+    <script>
+        Polymer({
+
+            is: 'device-list',
+
+            handleAddDevice: function(e) {
+                console.log("adding device");
+                this.$.addDeviceDialog.open();
+            },
+
+            // handleResponse is called when server returned device data.
+            handleResponse: function(data) {
+                console.log(this.deviceList);
+
+                // Check if response has no devices.
+                // Display no devices messages.
+                if (this.deviceList.Data == null) {
+                    this.deviceListEmpty = true;
+                    return;
+                }
+
+                // Else show the list UI and hide text.
+                this.deviceListEmpty = false;
+            },
+
+            // Toggle device state.
+            handleDeviceToggle: function(event) {
+                console.log(event.model.item);
+            },
+
+            // Handles response for data send to server.
+            // Is bound in the HTML Tag via on-response.
+            handleAjaxResponse: function(event) {
+                var status = event.detail.status;
+                var action = this.$.ajaxRequestElement.method;
+
+
+                // Handle error response.
+                if (status >= 500) {
+                    console.error("Server error while sending data.", status, event.detail);
+
+                    // Display error.
+                    return;
+                }
+
+                if (status >= 400) {
+                    console.error("Client error while sending data.", status, event.detail);
+                    // Display error.
+                    return;
+                }
+
+                // Update current device list.
+                this.$.ajaxDataElement.generateRequest()
+
+                if (status == 201) {
+                    console.log("Success. New device created.", status, event.detail);
+                    this.$.statusToast.text = "Success! New device added.";
+                    this.$.statusToast.open();
+                    // Display error.
+                    return;
+                }
+
+
+                if (status == 200) {
+                    console.log("Success. Action performed with no errors.", status, event.detail);
+                    this.$.statusToast.open();
+                    // Display error.
+                    return;
+                }
+
+            },
+
+            // Handle user response for new device dialog.
+            handleAddDeviceDialogClose: function(event) {
+                // Check if add device was canceled.
+                // If so reset input values.
+                if (!event.detail.confirmed) {
+                    this.$.deviceName.value = "";
+                    this.$.deviceType.value = "";
+                    return;
+                }
+
+
+
+                // Validate input.
+
+                // Create device object.
+                var newDevice = {
+                    id: 0, // Set placeholder-id to zero since the id is set in on the server side.
+                    name: this.$.deviceName.value,
+                    type: this.$.deviceType.value,
+                    roomid: 0 // Element is created without link to any room.
+                }
+
+                var requestEl = this.$.ajaxRequestElement;
+                // TODO: Move paths into a central file or object.
+                requestEl.url = "/api/device/add";
+                requestEl.method = "CREATE";
+                requestEl.body = JSON.stringify(newDevice);
+                requestEl.headers = '{"Content-Type": "application/json;charset=utf-8"}'
+
+                // Make request to server.
+                requestEl.generateRequest();
+                // Now send newDevice to server.
+                console.log("making request...", newDevice);
+            },
+
+            handleRemoveDevice: function(event) {
+                var device = event.model.item;
+
+                // Check if a device was passed to the function.
+                if (!device) {
+                    return;
+                }
+
+                // Set the to be removed device.
+                this.toBeRemovedDevice = device;
+
+                // Open are-you-sure model.
+                this.$.removeDeviceDialog.open();
+
+                // The actual removeing is done in the remove handler.
+            },
+
+            // Handles user response for the remove dialog.
+            // So wheather the user realy want's to delete the device.
+            // This function makes the delete request to the server.
+            handleRemoveDeviceDialogClose: function(event) {
+                // Get the device.
+                var device = this.toBeRemovedDevice;
+
+                // Delete object.
+                // Only ID requered for delete action.
+                var data = {
+                    id: device.id
+                }
+
+                // Create the request.
+                var requestEl = this.$.ajaxRequestElement;
+                // TODO: Move paths into a central file or object.
+                requestEl.url = "/api/device/delete";
+                requestEl.method = "DELETE";
+                requestEl.body = JSON.stringify(data);
+                requestEl.headers = '{"Content-Type": "application/json;charset=utf-8"}'
+
+                // Make request to server.
+                requestEl.generateRequest();
+                // Now send newDevice to server.
+                console.log("making request...", data);
+            }
+
+
+            // Local assist functions.
+
+        });
+    </script>
+
+</dom-module>

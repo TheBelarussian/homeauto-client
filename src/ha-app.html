@@ -1,0 +1,147 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="my-icons.html">
+
+<dom-module id="ha-app">
+
+    <template>
+
+        <style>
+            :host {
+                display: block;
+                --app-primary-color: #27ae60;
+                --app-secondary-color: black;
+            }
+
+            app-header {
+                background-color: var(--app-primary-color);
+                color: #fff;
+            }
+
+            app-header paper-icon-button {
+                --paper-icon-button-ink-color: white;
+            }
+
+            app-drawer {
+                --app-drawer-content-container: {
+                    background-color: #2ecc71;
+                    color: #FFF;
+                }
+            }
+
+            .drawer-list {
+                margin: 0 20px;
+            }
+
+            .drawer-list a {
+                display: block;
+                padding: 0 16px;
+                line-height: 40px;
+                text-decoration: none;
+                color: #FFF;
+            }
+
+            .drawer-list a.iron-selected {
+                color: black;
+                font-weight: bold;
+            }
+
+            .drawer-list a.subroute {
+                padding-left: 32px;
+            }
+        </style>
+
+        <app-location route="{{route}}" use-hash-as-path></app-location>
+        <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
+
+        <app-drawer-layout fullbleed>
+
+            <!-- Drawer content -->
+            <app-drawer>
+                <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+                    <a name="device-list" data-title="Device List" href="#/device-list">List devices</a>
+                    <a name="room-list" data-title="Room List" href="#/room-list">List rooms</a>
+                </iron-selector>
+            </app-drawer>
+
+            <!-- Main content -->
+            <app-header-layout has-scrolling-region>
+
+                <app-header condenses reveals effects="waterfall">
+                    <app-toolbar>
+                        <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
+                        <div title>[[page]]</div>
+                    </app-toolbar>
+                </app-header>
+
+                <iron-pages role="main" selected="[[page]]" attr-for-selected="name">
+                    <device-list id="deviceList" name="device-list" title="Device List"></device-list>
+                    <room-list id="roomList" name="room-list" title="Device List"></room-list>
+                </iron-pages>
+
+            </app-header-layout>
+
+        </app-drawer-layout>
+
+    </template>
+
+    <script>
+        Polymer({
+
+            is: 'ha-app',
+
+            properties: {
+
+                page: {
+                    type: String,
+                    reflectToAttribute: true,
+                    observer: '_pageChanged'
+                },
+
+            },
+
+            observers: [
+                '_routePageChanged(routeData.page)'
+            ],
+
+            _handlePageChange: function(e) {
+                console.log(e);
+            },
+
+            _routePageChanged: function(page) {
+                this.page = page || 'device-list';
+            },
+
+            _pageChanged: function(page) {
+                // Change title.
+                // TODO: implement.
+
+                // load page import on demand.
+                this.importHref(
+                    this.resolveUrl(page + '.html'), null, null, true);
+            }
+
+        });
+    </script>
+
+</dom-module>
